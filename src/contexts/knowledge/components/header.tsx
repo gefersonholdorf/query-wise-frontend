@@ -1,5 +1,6 @@
 import { LibraryBig } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { KnowledgeBaseCreate } from "./create";
 
 export function KnowledgeBaseHeader() {
     return (
@@ -13,7 +14,7 @@ export function KnowledgeBaseHeader() {
                 <p>Sua central de conhecimento para consultas e suporte eficiente.</p>
             </div>
             <div className="flex gap-2">
-                <Button>Criar novo Conhecimento</Button>
+                <KnowledgeBaseCreate />
                 <Button>Criar nova Tag</Button>
             </div>
         </header>

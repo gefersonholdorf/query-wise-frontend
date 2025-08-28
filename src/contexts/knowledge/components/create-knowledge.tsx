@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useCreateKnowledge } from "../http/useCreateKnowledge";
+import { useCreateKnowledge } from "../http/use-create-knowledge";
 
 const createKnowledgeSchema = z.object({
     problem: z.string().min(1, "Obrigatório preencher o campo problema."),
@@ -24,7 +24,7 @@ const createKnowledgeSchema = z.object({
 
 type CreateKnowledgeSchema = z.infer<typeof createKnowledgeSchema>;
 
-export function KnowledgeBaseCreate() {
+export function CreateKnowledge() {
     const [open, setOpen] = useState(false);
     const { isPending, mutateAsync: createKnowledge } = useCreateKnowledge();
 
@@ -41,7 +41,6 @@ export function KnowledgeBaseCreate() {
         const response = await createKnowledge(data);
 
         if (!response.knowledgeId) {
-            console.log("Erro");
             return;
         }
 

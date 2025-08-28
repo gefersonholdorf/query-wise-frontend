@@ -1,6 +1,6 @@
 import { LibraryBig } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { KnowledgeBaseCreate } from "./create";
+import { CreateTag } from "@/contexts/tags/components/create-tag";
+import { CreateKnowledge } from "./create-knowledge";
 
 export function KnowledgeBaseHeader() {
     return (
@@ -10,12 +10,12 @@ export function KnowledgeBaseHeader() {
                 <span>Base de Conhecimento</span>
             </div>
             <div className="flex flex-col gap-2">
-                <h1 className="text-3xl font-bold">Seja Bem vindo(a) ao QueryVise</h1>
+                <h1 className="text-3xl font-bold">Seja Bem vindo(a) ao QueryWise</h1>
                 <p>Sua central de conhecimento para consultas e suporte eficiente.</p>
             </div>
             <div className="flex gap-2">
-                <KnowledgeBaseCreate />
-                <Button>Criar nova Tag</Button>
+                <CreateKnowledge />
+                <CreateTag />
             </div>
         </header>
     );

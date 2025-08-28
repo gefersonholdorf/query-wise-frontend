@@ -9,7 +9,8 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { tags } from "@/contexts/tags/http/fakeapi";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useFetchTags } from "@/contexts/tags/http/use-fetch-tags";
 import { knowledges } from "../http/fakeapi";
 import { KnowledgeBaseDetail } from "./detail";
 import { KnowledgeBaseList } from "./list";
@@ -19,6 +20,8 @@ export function KnowledgeBaseContent() {
     const [knowledgeSelected, setKnowledgeSelected] = useState<
         number | undefined
     >(undefined);
+
+    const { data: tags } = useFetchTags();
 
     function handleTagSelect(tagName: number) {
         setTagSelected(tagName);
@@ -34,7 +37,7 @@ export function KnowledgeBaseContent() {
     }
 
     return (
-        <main className="h-full w-full border-1 grid grid-cols-5">
+        <main className="h-full w-full border-1 grid grid-cols-5 bg-gray-100 rounded-lg">
             <div className="border-r">
                 <div className="flex gap-2 items-center justify-start border-b border-r p-2">
                     <div className="flex gap-2 items-center">
@@ -42,16 +45,22 @@ export function KnowledgeBaseContent() {
                         <span className="text-md font-semibold text-gray-800">Tags</span>
                     </div>
                 </div>
-                <div className="p-2">
-                    {tags.map((tag) => [
-                        <Tag
-                            select={tagSelected === tag.id}
-                            key={tag.id}
-                            name={tag.name}
-                            quantity={tag.quantity}
-                            onClick={() => handleTagSelect(tag.id)}
-                        />,
-                    ])}
+                <div className="p-3">
+                    {tags ? (
+                        tags.data.map((tag) => [
+                            <Tag
+                                select={tagSelected === tag.id}
+                                key={tag.id}
+                                name={tag.name}
+                                quantity={tag.quantity}
+                                onClick={() => handleTagSelect(tag.id)}
+                            />,
+                        ])
+                    ) : (
+                        Array.from({ length: 12 }, (_, i) => (
+                            <Skeleton key={i.toString()} className="h-10 w-full mt-2" />
+                        ))
+                    )}
                 </div>
             </div>
             <div className="col-span-2 flex-1 border-r flex flex-col gap-4">
@@ -91,7 +100,6 @@ export function KnowledgeBaseContent() {
                                     <DropdownMenuItem>Excluir</DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
-
                         )}
                     </div>
                 </div>

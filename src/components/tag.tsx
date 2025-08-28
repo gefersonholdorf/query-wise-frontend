@@ -4,11 +4,11 @@ import { tv } from "tailwind-variants";
 import { cn } from "@/lib/utils";
 
 const TagSelected = tv({
-    base: 'flex justify-between p-2 rounded-lg ',
+    base: 'flex justify-between p-2 rounded-lg',
     variants: {
         select: {
-            true: 'bg-gray-950 text-white',
-            false: 'bg-white text-gray-950 hover:bg-gray-100 cursor-pointer'
+            true: 'bg-blue-900 border border-blue-950 text-white',
+            false: 'bg-gray-100 text-gray-950 hover:bg-gray-700 hover:text-white cursor-pointer'
         }
     }
 })

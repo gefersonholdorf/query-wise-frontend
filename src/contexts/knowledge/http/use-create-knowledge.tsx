@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 interface CreateKnowledgeRequest {
     problem: string
     soluction: string
+    tags: number[]
 }
 
 interface CreateKnowledgeResponse {

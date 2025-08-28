@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogClose } from "@radix-ui/react-dialog";
+import { Tags, X } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -15,6 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { ComboboxTags } from "@/contexts/tags/components/combobox-tags";
 import { useCreateKnowledge } from "../http/use-create-knowledge";
 
 const createKnowledgeSchema = z.object({
@@ -23,6 +25,11 @@ const createKnowledgeSchema = z.object({
 });
 
 type CreateKnowledgeSchema = z.infer<typeof createKnowledgeSchema>;
+
+export interface TagSummary {
+    id: number;
+    name: string;
+}
 
 export function CreateKnowledge() {
     const [open, setOpen] = useState(false);
@@ -36,9 +43,29 @@ export function CreateKnowledge() {
         },
     });
 
+    const [tagsSelected, setTagsSelected] = useState<TagSummary[]>([]);
+
+    function handleRemoveTagSelected(tagId: number) {
+        const newTagsSelected = tagsSelected.filter((tag) => tag.id !== tagId);
+
+        if (!newTagsSelected) {
+            return;
+        }
+
+        setTagsSelected(newTagsSelected);
+    }
+
+    function handleAddTagSelected(tag: TagSummary) {
+        setTagsSelected([...tagsSelected, tag]);
+    }
+
     async function handleSubmit(data: CreateKnowledgeSchema) {
-        console.log(data);
-        const response = await createKnowledge(data);
+        const tagsIds = tagsSelected.map((tag) => tag.id)
+
+        const response = await createKnowledge({
+            ...data,
+            tags: tagsIds
+        });
 
         if (!response.knowledgeId) {
             return;
@@ -46,6 +73,7 @@ export function CreateKnowledge() {
 
         setOpen(false);
         toast.success("Conhecimento adicionado com sucesso!");
+        setTagsSelected([])
         form.reset();
     }
 
@@ -85,11 +113,32 @@ export function CreateKnowledge() {
                             {form.formState.errors.soluction?.message}
                         </span>
                     </div>
+                    <div className="flex flex-col">
+                        <span className="text-sm text-gray-600">Tags:</span>
+                        <ComboboxTags onAddTagSelected={handleAddTagSelected} tagsSelected={tagsSelected} />
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                        {tagsSelected.length > 0 &&
+                            tagsSelected.map((tag) => (
+                                <div
+                                    key={tag.id}
+                                    className="inline-flex gap-2 items-center justify-center bg-blue-900 p-1 rounded-sm"
+                                >
+                                    <Tags size={15} className="text-white" />
+                                    <span className="text-gray-50 text-sm">{tag.name}</span>
+                                    <X
+                                        size={15}
+                                        className="text-white cursor-pointer"
+                                        onClick={() => handleRemoveTagSelected(tag.id)}
+                                    />
+                                </div>
+                            ))}
+                    </div>
                     <div className="grid grid-cols-2 gap-2">
                         <DialogClose className="w-full" asChild>
                             <Button variant={"destructive"}>Cancelar</Button>
                         </DialogClose>
-                        <Button type="submit" disabled={isPending}>
+                        <Button type="submit" disabled={isPending} className="bg-emerald-500 hover:bg-emerald-400">
                             {isPending ? "Criando" : "Criar"}
                         </Button>
                     </div>

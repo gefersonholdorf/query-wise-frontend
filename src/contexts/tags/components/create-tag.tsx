@@ -76,7 +76,7 @@ export function CreateTag() {
                         <DialogClose className="w-full" asChild>
                             <Button variant={"destructive"}>Cancelar</Button>
                         </DialogClose>
-                        <Button type="submit" disabled={isPending}>
+                        <Button type="submit" disabled={isPending} className="bg-emerald-500 hover:bg-emerald-400">
                             {isPending ? "Criando" : "Criar"}
                         </Button>
                     </div>

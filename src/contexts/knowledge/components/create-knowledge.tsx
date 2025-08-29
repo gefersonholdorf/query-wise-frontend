@@ -33,6 +33,7 @@ export interface TagSummary {
 
 export function CreateKnowledge() {
     const [open, setOpen] = useState(false);
+    const [tagError, setTagError] = useState(false)
     const { isPending, mutateAsync: createKnowledge } = useCreateKnowledge();
 
     const form = useForm<CreateKnowledgeSchema>({
@@ -56,10 +57,18 @@ export function CreateKnowledge() {
     }
 
     function handleAddTagSelected(tag: TagSummary) {
+        setTagError(false)
         setTagsSelected([...tagsSelected, tag]);
     }
 
     async function handleSubmit(data: CreateKnowledgeSchema) {
+        console.log(tagError)
+        if (tagsSelected.length === 0) {
+            setTagError(true)
+            console.log(tagError)
+            return
+        }
+
         const tagsIds = tagsSelected.map((tag) => tag.id)
 
         const response = await createKnowledge({
@@ -116,6 +125,9 @@ export function CreateKnowledge() {
                     <div className="flex flex-col">
                         <span className="text-sm text-gray-600">Tags:</span>
                         <ComboboxTags onAddTagSelected={handleAddTagSelected} tagsSelected={tagsSelected} />
+                        <span className="text-sm text-red-500">
+                            {tagError && 'Obrigatório selecionar uma tag'}
+                        </span>
                     </div>
                     <div className="flex flex-wrap gap-2">
                         {tagsSelected.length > 0 &&

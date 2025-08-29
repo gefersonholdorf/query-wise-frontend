@@ -1,27 +1,25 @@
-import { BookCopy, BookOpenText, EllipsisVertical, Tags } from "lucide-react";
 import { useState } from "react";
 import { Tag } from "@/components/tag";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useFetchTags } from "@/contexts/tags/http/use-fetch-tags";
-import { knowledges } from "../http/fakeapi";
+import { useFetchKnowledges } from "../http/fetch-knowledges";
 import { KnowledgeBaseDetail } from "./detail";
 import { KnowledgeBaseList } from "./list";
 
 export function KnowledgeBaseContent() {
-    const [tagSelected, setTagSelected] = useState(1);
+    const [tagSelected, setTagSelected] = useState(0);
     const [knowledgeSelected, setKnowledgeSelected] = useState<
         number | undefined
     >(undefined);
+    const [search, setSearch] = useState("");
 
     const { data: tags } = useFetchTags();
+    const { data: knowledges, isLoading } = useFetchKnowledges(search);
+
+    function handleSetSearch(search: string) {
+        setSearch(search);
+    }
 
     function handleTagSelect(tagName: number) {
         setTagSelected(tagName);
@@ -37,74 +35,44 @@ export function KnowledgeBaseContent() {
     }
 
     return (
-        <main className="h-full w-full border-1 grid grid-cols-5 bg-gray-100 rounded-lg">
+        <main className="h-full w-full border grid grid-cols-5 bg-gray-50 rounded-lg drop-shadow-[0_-4px_6px_rgba(0,0,0,0.1)]">
             <div className="border-r">
-                <div className="flex gap-2 items-center justify-start border-b border-r p-2">
-                    <div className="flex gap-2 items-center">
-                        <Tags size={20} />
-                        <span className="text-md font-semibold text-gray-800">Tags</span>
+                <ScrollArea className="h-145">
+                    <div className="p-3">
+                        {tags
+                            ? tags.data.map((tag) => [
+                                <Tag
+                                    select={tagSelected === tag.id}
+                                    key={tag.id}
+                                    name={tag.name}
+                                    quantity={tag.quantity}
+                                    onClick={() => handleTagSelect(tag.id)}
+                                />,
+                            ])
+                            : Array.from({ length: 12 }, (_, i) => (
+                                <Skeleton key={i.toString()} className="h-10 w-full mt-2" />
+                            ))}
                     </div>
-                </div>
-                <div className="p-3">
-                    {tags ? (
-                        tags.data.map((tag) => [
-                            <Tag
-                                select={tagSelected === tag.id}
-                                key={tag.id}
-                                name={tag.name}
-                                quantity={tag.quantity}
-                                onClick={() => handleTagSelect(tag.id)}
-                            />,
-                        ])
-                    ) : (
-                        Array.from({ length: 12 }, (_, i) => (
-                            <Skeleton key={i.toString()} className="h-10 w-full mt-2" />
-                        ))
-                    )}
-                </div>
+                </ScrollArea>
             </div>
             <div className="col-span-2 flex-1 border-r flex flex-col gap-4">
-                <div className="flex gap-2 items-center justify-start border-b border-r p-2">
-                    <div className="flex gap-2 items-center">
-                        <BookCopy size={20} />
-                        <span className="text-md font-semibold text-gray-800">
-                            Conhecimentos
-                        </span>
-                    </div>
-                </div>
-
                 <KnowledgeBaseList
+                    isLoading={isLoading}
+                    onSearchFilter={handleSetSearch}
                     knowledgeSelected={knowledgeSelected}
                     onKnowledgeSelect={handleKnowledgeSelect}
-                    knowledges={knowledges.filter((k) => k.tagsId.includes(tagSelected))}
+                    knowledges={
+                        knowledges?.data.filter((k) =>
+                            k.tags.some((t) => t.id === tagSelected),
+                        ) ?? []
+                    }
                 />
             </div>
             <div className="col-span-2">
-                <div className="flex gap-2 items-center justify-between border-b border-r px-2 p-2">
-                    <div className="flex gap-2 items-center">
-                        <BookOpenText size={20} />
-                        <span className="text-md font-semibold text-gray-800">
-                            Detalhe do Conhecimento
-                        </span>
-                    </div>
-                    <div className="flex border-l px-2">
-                        {knowledges.find((k) => k.id === knowledgeSelected) && (
-                            <DropdownMenu>
-                                <DropdownMenuTrigger>
-                                    <EllipsisVertical size={20} className="cursor-pointer" />
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent>
-                                    <DropdownMenuLabel>Ações</DropdownMenuLabel>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem>Editar</DropdownMenuItem>
-                                    <DropdownMenuItem>Excluir</DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        )}
-                    </div>
-                </div>
                 <KnowledgeBaseDetail
-                    knowledge={knowledges.find((k) => k.id === knowledgeSelected) ?? null}
+                    knowledge={
+                        knowledges?.data.find((k) => k.id === knowledgeSelected) ?? null
+                    }
                 />
             </div>
         </main>

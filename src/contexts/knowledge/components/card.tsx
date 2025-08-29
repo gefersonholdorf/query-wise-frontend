@@ -3,6 +3,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/pt-br";
 import type { ComponentProps } from "react";
 import { tv } from "tailwind-variants";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
@@ -23,6 +24,10 @@ interface KnowledgeBaseCardProps extends ComponentProps<"div"> {
     problem: string;
     soluction: string;
     createdAt: Date;
+    tags: {
+        id: number;
+        name: string;
+    }[];
     isSelect: boolean;
 }
 
@@ -35,11 +40,15 @@ export function KnowledgeBaseCard({
     problem,
     soluction,
     createdAt,
+    tags,
     isSelect,
     ...props
 }: KnowledgeBaseCardProps) {
     return (
-        <Card className={cn(knowledgeSelect({ select: isSelect }), props.className)} {...props}>
+        <Card
+            className={cn(knowledgeSelect({ select: isSelect }), props.className)}
+            {...props}
+        >
             <div className="flex justify-between items-center">
                 <CardTitle className="text-lg font-medium">
                     {truncate(problem, 50)}
@@ -52,6 +61,14 @@ export function KnowledgeBaseCard({
                     {truncate(soluction, 120)}
                 </span>
             </div>
-        </Card >
+            <div className="flex gap-2">
+                {tags.length > 0 &&
+                    tags.map((tag) => {
+                        return <Badge key={tag.id}>
+                            {tag.name}
+                        </Badge>;
+                    })}
+            </div>
+        </Card>
     );
 }

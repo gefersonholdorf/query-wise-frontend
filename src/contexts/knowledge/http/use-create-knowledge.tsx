@@ -30,6 +30,7 @@ export function useCreateKnowledge() {
             return result
         },
         onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["tags"] });
             queryClient.invalidateQueries({ queryKey: ["knowledges"] });
         },
         onError: (error) => {

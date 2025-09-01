@@ -49,7 +49,7 @@ export function CreateTag() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button>Criar nova Tag</Button>
+                <Button className="bg-blue-900 hover:bg-blue-800">Criar nova Tag</Button>
             </DialogTrigger>
             <DialogContent>
                 <form

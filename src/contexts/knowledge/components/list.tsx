@@ -52,10 +52,10 @@ export function KnowledgeBaseList({
     }
 
     return (
-        <div className="flex flex-col gap-4 px-4 mt-4">
+        <div className="flex flex-col gap-4 px-4 mt-4 ">
             <form onSubmit={form.handleSubmit(handleFilter)} className="flex gap-2">
-                <Input placeholder="Search" {...form.register("search")} />
-                <Button type="submit">Pesquisar</Button>
+                <Input className="bg-white" placeholder="Search" {...form.register("search")} />
+                <Button type="submit" className="bg-blue-900 hover:bg-blue-800">Pesquisar</Button>
             </form>
             {isLoading && (
                 <>
@@ -82,17 +82,17 @@ export function KnowledgeBaseList({
                 </ScrollArea>
             )}
 
-            {knowledges.length === 0 && (
+            {!isLoading && knowledges.length === 0 && (
                 <div className="flex flex-col mt-4 items-center text-center text-gray-500">
                     <img
                         src="/empty-archive.png"
                         alt="Nenhum conhecimento"
                         className="w-48 h-48 mb-4"
                     />
-                    <h2 className="text-xl font-semibold">
+                    <h2 className="text-3xl font-semibold text-gray-900">
                         Nenhum conhecimento encontrado
                     </h2>
-                    <p className="mt-2 text-sm text-gray-400 mb-4">
+                    <p className="mt-2 text-sm text-gray-700 mb-4">
                         Selecione uma tag com conhecimentos ou crie um novo conhecimento
                         para começar.
                     </p>

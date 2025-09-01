@@ -14,7 +14,7 @@ const knowledgeSelect = tv({
     base: "p-4 bg-gray-50 hover:bg-gray-100 cursor-pointer transition-transform duration-200 transform hover:scale-[1.02]",
     variants: {
         select: {
-            true: "scale-[1.02] bg-blue-50 border-blue-200",
+            true: "scale-[1.02] bg-blue-50 border-blue-900",
             false: "",
         },
     },
@@ -54,17 +54,17 @@ export function KnowledgeBaseCard({
                     {truncate(problem, 50)}
                 </CardTitle>
 
-                <span className="text-sm">{dayjs(createdAt).fromNow()}</span>
+                <span className="text-sm min-w-20">{dayjs(createdAt).fromNow()}</span>
             </div>
             <div>
-                <span className="text-sm text-gray-600">
+                <span className="text-sm text-justify text-gray-600">
                     {truncate(soluction, 120)}
                 </span>
             </div>
             <div className="flex gap-2">
                 {tags.length > 0 &&
                     tags.map((tag) => {
-                        return <Badge key={tag.id}>
+                        return <Badge key={tag.id} className={"bg-blue-900"}>
                             {tag.name}
                         </Badge>;
                     })}

@@ -12,6 +12,7 @@ export function KnowledgeBase() {
                 <TabsList className="bg-transparent gap-4">
                     <TabsTrigger value="dashboard" className="transition-transform duration-200 transform hover:scale-[1.05]">Dashboard</TabsTrigger>
                     <TabsTrigger value="knowledge" className="transition-transform duration-200 transform hover:scale-[1.05]">Base de Conhecimento</TabsTrigger>
+                    <TabsTrigger value="simular" className="transition-transform duration-200 transform hover:scale-[1.05]">Simular Correspondência</TabsTrigger>
                 </TabsList>
                 <TabsContent value="dashboard" className="h-full">
                     Make changes to your account here.

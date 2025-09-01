@@ -89,7 +89,7 @@ export function CreateKnowledge() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button>Criar novo Conhecimento</Button>
+                <Button className="bg-blue-900 hover:bg-blue-800">Criar novo Conhecimento</Button>
             </DialogTrigger>
             <DialogContent>
                 <form
@@ -156,6 +156,6 @@ export function CreateKnowledge() {
                     </div>
                 </form>
             </DialogContent>
-        </Dialog>
+        </Dialog >
     );
 }

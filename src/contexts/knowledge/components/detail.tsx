@@ -5,10 +5,13 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import "dayjs/locale/pt-br";
+import { zodResolver } from "@hookform/resolvers/zod";
 import dayjs from "dayjs";
 import { EllipsisVertical } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { z } from "zod/v4";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -33,6 +36,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import { useDeleteKnowledge } from "../http/use-delete-knowledge";
+import { useUpdateKnowledge } from "../http/use-update-knowledge";
 import type { Knowledge } from "./list";
 
 dayjs.extend(relativeTime);
@@ -42,10 +46,27 @@ interface KnowledgeBaseDetailProps {
     knowledge: Knowledge | null;
 }
 
+const updateKnowledgeSchema = z.object({
+    problem: z.string().min(1, "Campo obrigatório."),
+    soluction: z.string().min(1, "Campo obrigatório."),
+});
+
+type UpdateKnowledgeSchema = z.infer<typeof updateKnowledgeSchema>;
+
 export function KnowledgeBaseDetail({ knowledge }: KnowledgeBaseDetailProps) {
     const [edit, setEdit] = useState(false);
 
     const { mutateAsync: deleteKnowledge } = useDeleteKnowledge();
+    const { mutateAsync: updateKnowledge, isPending: isPendingUpdate } =
+        useUpdateKnowledge();
+
+    const form = useForm<UpdateKnowledgeSchema>({
+        resolver: zodResolver(updateKnowledgeSchema),
+        defaultValues: {
+            problem: knowledge?.problem,
+            soluction: knowledge?.soluction,
+        },
+    });
 
     async function handleDeleteKnowledge() {
         try {
@@ -55,9 +76,38 @@ export function KnowledgeBaseDetail({ knowledge }: KnowledgeBaseDetailProps) {
         }
     }
 
+    async function handleUpdateKnowledge(data: UpdateKnowledgeSchema) {
+        try {
+            const { problem, soluction } = data
+            if (!knowledge) {
+                return null;
+            }
+            await updateKnowledge({
+                id: knowledge.id,
+                problem: problem,
+                soluction: soluction,
+            });
+
+            setEdit(false);
+
+            toast.success("Conhecimento alterado com sucesso.");
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
         setEdit(false);
     }, [knowledge]);
+
+    useEffect(() => {
+        if (knowledge) {
+            form.reset({
+                problem: knowledge.problem ?? "",
+                soluction: knowledge.soluction ?? "",
+            });
+        }
+    }, [knowledge, form]);
 
     function handleSetEdit() {
         setEdit(!edit);
@@ -140,38 +190,56 @@ export function KnowledgeBaseDetail({ knowledge }: KnowledgeBaseDetailProps) {
                         )}
                     </span>
                 </div>
-                <div className="px-4 bg-white">
-                    {edit ? (
-                        <Input disabled={!edit} value={knowledge.problem} />
-                    ) : (
-                        <h3 className="text-2xl font-bold">{knowledge.problem}</h3>
-                    )}
-                </div>
-                <div className="bg-white">
-                    <Separator />
-                </div>
-                <div className="h-full flex flex-col justify-between">
+                <form onSubmit={form.handleSubmit(handleUpdateKnowledge)}>
                     <div className="px-4 bg-white">
                         {edit ? (
-                            <Textarea className="h-90" value={knowledge.soluction}></Textarea>
+                            <>
+                                <Input disabled={!edit} {...form.register('problem')} />
+                                <span className="text-sm text-red-500">
+                                    {form.formState.errors.problem?.message}
+                                </span>
+                            </>
                         ) : (
-                            <ScrollArea className="h-90">
-                                <p
-                                    className="text-gray-700 text-sm"
-                                    dangerouslySetInnerHTML={{
-                                        __html: knowledge.soluction.replace(/\n/g, "<br />"),
-                                    }}
-                                />
-                            </ScrollArea>
+                            <h3 className="text-2xl font-bold">{knowledge.problem}</h3>
                         )}
                     </div>
-                    {edit && (
-                        <div className="grid grid-cols-2 gap-4 p-2">
-                            <Button onClick={handleSetEdit}>Cancelar</Button>
-                            <Button className="bg-blue-900 hover:bg-blue-800">Editar</Button>
+                    <div className="bg-white p-2">
+                        <Separator />
+                    </div>
+                    <div className="h-full flex flex-col justify-between">
+                        <div className="px-4 bg-white">
+                            {edit ? (
+                                <>
+                                    <Textarea className="h-80" {...form.register('soluction')}></Textarea>
+                                    <span className="text-sm text-red-500">
+                                        {form.formState.errors.soluction?.message}
+                                    </span>
+                                </>
+                            ) : (
+                                <ScrollArea className="h-90">
+                                    <p
+                                        className="text-gray-700 text-sm"
+                                        dangerouslySetInnerHTML={{
+                                            __html: knowledge.soluction.replace(/\n/g, "<br />"),
+                                        }}
+                                    />
+                                </ScrollArea>
+                            )}
                         </div>
-                    )}
-                </div>
+                        {edit && (
+                            <div className="grid grid-cols-2 gap-4 p-2">
+                                <Button onClick={handleSetEdit}>Cancelar</Button>
+                                <Button
+                                    className="bg-blue-900 hover:bg-blue-800"
+                                    disabled={isPendingUpdate}
+                                    type="submit"
+                                >
+                                    Editar
+                                </Button>
+                            </div>
+                        )}
+                    </div>
+                </form>
             </div>
         </>
     );

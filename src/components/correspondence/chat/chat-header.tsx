@@ -10,7 +10,7 @@ export function ChatHeader() {
                 </Avatar>
                 <div className="flex flex-col">
                     <span className="text-lg font-medium text-gray-800">Bot QueryWise</span>
-                    <span className="text-sm text-gray-600">Online</span>
+                    <span className="text-sm text-gray-600">online</span>
                 </div>
             </div>
 

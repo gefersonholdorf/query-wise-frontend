@@ -40,7 +40,7 @@ export function KnowledgeBaseContent() {
     }
 
     return (
-        <main className="h-full w-full border grid grid-cols-5 bg-gray-50 rounded-lg drop-shadow-[0_-4px_6px_rgba(0,0,0,0.1)] bg-[url('/fundo.png')] ">
+        <main className="h-full w-full border grid grid-cols-5 bg-transparent rounded-lg drop-shadow-[0_-4px_6px_rgba(0,0,0,0.1)] bg-[url('/fundo.png')] ">
             <div className="border-r">
                 <ScrollArea className="h-145">
                     <div className="p-3">
@@ -60,7 +60,7 @@ export function KnowledgeBaseContent() {
                     </div>
                 </ScrollArea>
             </div>
-            <div className="col-span-2 flex-1 border-r flex flex-col gap-4 bg-gray-100">
+            <div className="col-span-2 flex-1 border-r flex flex-col gap-4 bg-transparent">
                 <KnowledgeBaseList
                     isLoading={isLoading}
                     onSearchFilter={handleSetSearch}

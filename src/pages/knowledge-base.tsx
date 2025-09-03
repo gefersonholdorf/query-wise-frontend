@@ -1,3 +1,4 @@
+import { CorrespondenceComponent } from "@/components/correspondence";
 import { Footer } from "@/components/footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { KnowledgeBaseContent } from "@/contexts/knowledge/components/content";
@@ -19,6 +20,9 @@ export function KnowledgeBase() {
                 </TabsContent>
                 <TabsContent value="knowledge" className="h-full">
                     <KnowledgeBaseContent />
+                </TabsContent>
+                <TabsContent value="simular" className="h-full">
+                    <CorrespondenceComponent />
                 </TabsContent>
             </Tabs>
 

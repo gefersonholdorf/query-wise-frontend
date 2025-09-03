@@ -1,12 +1,14 @@
 /** biome-ignore-all lint/correctness/useExhaustiveDependencies: <"explanation"> */
 /** biome-ignore-all lint/style/noNonNullAssertion: <"explanation"> */
 /** biome-ignore-all lint/security/noDangerouslySetInnerHtml: <"explanation"> */
-import relativeTime from "dayjs/plugin/relativeTime";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import "dayjs/locale/pt-br";
 import { zodResolver } from "@hookform/resolvers/zod";
 import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
 import { EllipsisVertical } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -78,7 +80,7 @@ export function KnowledgeBaseDetail({ knowledge }: KnowledgeBaseDetailProps) {
 
     async function handleUpdateKnowledge(data: UpdateKnowledgeSchema) {
         try {
-            const { problem, soluction } = data
+            const { problem, soluction } = data;
             if (!knowledge) {
                 return null;
             }
@@ -194,7 +196,7 @@ export function KnowledgeBaseDetail({ knowledge }: KnowledgeBaseDetailProps) {
                     <div className="px-4 bg-white">
                         {edit ? (
                             <>
-                                <Input disabled={!edit} {...form.register('problem')} />
+                                <Input disabled={!edit} {...form.register("problem")} />
                                 <span className="text-sm text-red-500">
                                     {form.formState.errors.problem?.message}
                                 </span>
@@ -210,7 +212,10 @@ export function KnowledgeBaseDetail({ knowledge }: KnowledgeBaseDetailProps) {
                         <div className="px-4 bg-white">
                             {edit ? (
                                 <>
-                                    <Textarea className="h-80" {...form.register('soluction')}></Textarea>
+                                    <Textarea
+                                        className="h-80"
+                                        {...form.register("soluction")}
+                                    ></Textarea>
                                     <span className="text-sm text-red-500">
                                         {form.formState.errors.soluction?.message}
                                     </span>

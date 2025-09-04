@@ -1,4 +1,10 @@
-import { LayoutDashboard, LibraryBig, MessageCircleWarning, Send } from "lucide-react";
+import {
+    LayoutDashboard,
+    LibraryBig,
+    MessageCircleWarning,
+    ScanQrCode,
+    Send,
+} from "lucide-react";
 import { CorrespondenceComponent } from "@/components/correspondence";
 import { Dashboard } from "@/components/dashboard";
 import { Footer } from "@/components/footer";
@@ -8,6 +14,7 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { BotConnectQRCode } from "@/contexts/bot/components";
 import { KnowledgeBaseContent } from "@/contexts/knowledge/components/content";
 import { KnowledgeBaseHeader } from "@/contexts/knowledge/components/header";
 import { PendingMessagesComponent } from "@/contexts/pending-messages/components";
@@ -31,7 +38,9 @@ export function KnowledgeBase() {
                                 <LayoutDashboard />
                             </TooltipTrigger>
                             <TooltipContent>
-                                <p>Será exibido o Dashboard com todas as informações relevantes.</p>
+                                <p>
+                                    Será exibido o Dashboard com todas as informações relevantes.
+                                </p>
                             </TooltipContent>
                         </Tooltip>
                         Dashboard
@@ -59,7 +68,10 @@ export function KnowledgeBase() {
                                 <MessageCircleWarning />
                             </TooltipTrigger>
                             <TooltipContent>
-                                <p>Será exibido todas as mensagens enviadas que ainda não foram tratadas.</p>
+                                <p>
+                                    Será exibido todas as mensagens enviadas que ainda não foram
+                                    tratadas.
+                                </p>
                             </TooltipContent>
                         </Tooltip>
                         Mensagens Pendentes
@@ -73,10 +85,30 @@ export function KnowledgeBase() {
                                 <Send />
                             </TooltipTrigger>
                             <TooltipContent>
-                                <p>Aqui será possível realizar uma simulação de chat para ver a similaridades de mensagens com a base de conhecimento atual.</p>
+                                <p>
+                                    Aqui será possível realizar uma simulação de chat para ver a
+                                    similaridades de mensagens com a base de conhecimento atual.
+                                </p>
                             </TooltipContent>
                         </Tooltip>
                         Simular Correspondência
+                    </TabsTrigger>
+                    <TabsTrigger
+                        value="connect"
+                        className="transition-transform duration-200 transform hover:scale-[1.05]"
+                    >
+                        <Tooltip>
+                            <TooltipTrigger>
+                                <ScanQrCode />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>
+                                    Aqui será possível parear o whatsaap para o bot responder as
+                                    mensagens
+                                </p>
+                            </TooltipContent>
+                        </Tooltip>
+                        Conectar Whatsaap
                     </TabsTrigger>
                 </TabsList>
                 <TabsContent value="dashboard" className="h-full">
@@ -90,6 +122,9 @@ export function KnowledgeBase() {
                 </TabsContent>
                 <TabsContent value="pending-messages" className="h-full">
                     <PendingMessagesComponent />
+                </TabsContent>
+                <TabsContent value="connect" className="h-full">
+                    <BotConnectQRCode />
                 </TabsContent>
             </Tabs>
 

@@ -1,5 +1,8 @@
+import { useState } from "react";
 import { Content } from "./content";
 import { DataList, type Message } from "./data-list";
+import { Filtering } from "./filtering";
+import { Paginator } from "./paginator";
 
 const items: Message[] = [
     {
@@ -106,13 +109,23 @@ const items: Message[] = [
 
 export const PendindMessages = {
     Content: Content,
-    DataList: DataList
+    DataList: DataList,
+    Filtering: Filtering,
+    Paginator: Paginator
 }
 
 export function PendingMessagesComponent() {
+    const [page, setPage] = useState(1);
+
+    function handleSetPage(newPage: number) {
+        setPage(newPage);
+    }
+
     return (
         <PendindMessages.Content>
+            <PendindMessages.Filtering />
             <PendindMessages.DataList items={items} />
+            <PendindMessages.Paginator page={page} totalPages={10} onPageChange={handleSetPage} />
         </PendindMessages.Content>
     )
 }

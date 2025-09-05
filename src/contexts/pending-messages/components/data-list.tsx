@@ -1,5 +1,4 @@
-import { BadgeCheck, Check, CircleX, EllipsisVertical, ShieldQuestionMark } from "lucide-react";
-import { useState } from "react";
+import { ArrowDownUp, BadgeAlert, BadgeCheck, BadgeX, Check, CircleX, EllipsisVertical, ShieldQuestionMark, User } from "lucide-react";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -27,7 +26,6 @@ import {
 } from "@/components/ui/tooltip";
 import { formatDate } from "@/helpers/format-date";
 import { truncateString } from "@/helpers/truncate-string";
-import { Paginator } from "./paginator";
 
 export interface Message {
     id: number;
@@ -45,10 +43,24 @@ interface DataListProps {
 }
 
 export function DataList({ items }: DataListProps) {
-    const [page, setPage] = useState(1);
+    function getStatusByMessage(message: Message) {
+        if (message.status === 'CONCLUIDO') {
+            return (
+                <BadgeCheck className="text-emerald-500" size={15} />
+            )
+        }
 
-    function handleSetPage(newPage: number) {
-        setPage(newPage);
+        if (message.status === 'ERRO') {
+            return (
+                <BadgeX className="text-red-500" size={15} />
+            )
+        }
+
+        if (message.status === 'PENDENTE') {
+            return (
+                <BadgeAlert className="text-yellow-500" size={15} />
+            )
+        }
     }
 
     function getActionsByMessage(message: Message) {
@@ -110,15 +122,15 @@ export function DataList({ items }: DataListProps) {
     }
 
     return (
-        <ul className="w-full h-full rounded-md border">
+        <ul className="w-full rounded-md border">
             <li className="w-full grid grid-cols-8 bg-gray-100 p-2 text-sm">
-                <span>Atendido pelo Bot</span>
+                <span className="flex items-center gap-1 cursor-pointer"><ArrowDownUp size={15} />Atendido pelo Bot</span>
                 <span className="col-span-2">Mensagem</span>
-                <span>Status</span>
-                <span>Enviado por</span>
-                <span>Número</span>
-                <span>Enviado em</span>
-                <span>Ações</span>
+                <span className="flex items-center gap-1 cursor-pointer"><ArrowDownUp size={15} />Status</span>
+                <span className="flex items-center gap-1 cursor-pointer"><ArrowDownUp size={15} />Enviado por</span>
+                <span className="flex items-center gap-1 cursor-pointer"><ArrowDownUp size={15} />Número</span>
+                <span className="flex items-center gap-1 cursor-pointer"><ArrowDownUp size={15} />Enviado em</span>
+                <span className="flex items-center gap-1">Ações</span>
             </li>
             <Separator />
             {items.map((item) => (
@@ -147,24 +159,23 @@ export function DataList({ items }: DataListProps) {
                             </Tooltip>
                         )}
                     </span>
-                    <span className="col-span-2">
+                    <span className="col-span-2 flex gap-1 items-center">
                         <Tooltip>
                             <TooltipTrigger>
                                 {truncateString(item.message, 40)}
                             </TooltipTrigger>
                             <TooltipContent>
-                                <p>{item.message}</p>
+                                <p >{item.message}</p>
                             </TooltipContent>
                         </Tooltip>
                     </span>
-                    <span>{item.status}</span>
-                    <span>{item.sendBy}</span>
-                    <span>{item.number}</span>
-                    <span>{formatDate(item.sendIn)}</span>
-                    <span>{getActionsByMessage(item)}</span>
+                    <span className="flex gap-1 items-center">{getStatusByMessage(item)}{item.status}</span>
+                    <span className="flex gap-1 items-center"><User size={15} />{item.sendBy}</span>
+                    <span className="flex gap-1 items-center">{item.number}</span>
+                    <span className="flex gap-1 items-center">{formatDate(item.sendIn)}</span>
+                    <span className="flex gap-1 items-center">{getActionsByMessage(item)}</span>
                 </li>
             ))}
-            <Paginator page={page} totalPages={10} onPageChange={handleSetPage} />
         </ul>
     );
 }

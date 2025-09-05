@@ -108,7 +108,7 @@ export function KnowledgeBase() {
                                 </p>
                             </TooltipContent>
                         </Tooltip>
-                        Conectar Whatsaap
+                        Conectar Whatsapp
                     </TabsTrigger>
                 </TabsList>
                 <TabsContent value="dashboard" className="h-full">

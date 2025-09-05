@@ -21,7 +21,9 @@ export function Paginator({ page, totalPages, onPageChange }: PaginatorProps) {
                 onClick={() => !isFirst && onPageChange(page - 1)}
             />
 
-            <span className="px-4 bg-blue-100 rounded-full">{page}</span>
+            <span className="w-8 h-8 flex items-center justify-center bg-blue-800 text-white rounded-full">
+                {page}
+            </span>
 
             <ChevronRight
                 className={`cursor-pointer ${isLast ? "opacity-50 cursor-not-allowed" : ""}`}
